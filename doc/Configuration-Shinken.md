@@ -42,25 +42,37 @@ shinken@shinken:~$ vi /etc/shinken/hosts/localhost.cfg
 
 ## Contacts
 ```
-   # Install local SNMP agent
-   su -
-   apt-get update
-   apt-get install snmpd
-   # Not yet! but may be necessary for future monitoring of switches ...
-   # apt-get install snmp snmp-mibs-downloader
+shinken@shinken:~$ vi /etc/shinken/contacts/admin.cfg
 
-   # Allow SNMP get
-   vi /etc/snmp/snmpd.conf
-   =>
-      #  Listen for connections from the local system only
-      #agentAddress  udp:127.0.0.1:161
-      #  Listen for connections on all interfaces (both IPv4 *and* IPv6)
-      agentAddress udp:161,udp6:[::1]:161
-   =>
-      # rocommunity public  default    -V systemonly
-      rocommunity public
-   # Restart SNMP agent
-   /etc/init.d/snmpd restart
+   # Administrator
+   # Fred: Change its password ...
+   define contact{
+       use                 generic-contact
+       contact_name        admin
+       alias               Big brother
+       email               shinken@localhost
+       pager               0600000000   ; contact phone number
+       password            **********
+       is_admin            1
+       expert              1
+   }
+
+```
+
+```
+shinken@shinken:~$ vi /etc/shinken/contacts/guest.cfg
+
+   # Guest user
+   # Fred: Change its password or remove this contact ...
+   define contact{
+       use                 generic-contact
+       contact_name        guest
+       alias               Guest
+       email               guest@localhost
+       password            ********
+       can_submit_commands 0
+   }
+
 ```
 
 
