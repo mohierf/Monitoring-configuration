@@ -5,7 +5,7 @@ On a fresh Debian 7.9 install:
 ```
    # Logged in as root
    su -
-   
+
    # Create a Shinken user account
    adduser shinken
    passwd shinken
@@ -14,16 +14,24 @@ On a fresh Debian 7.9 install:
    apt-get install python-setuptools python-pip
    apt-get install python-pycurl
    apt-get install python-setproctitle
-   
+
    # Shinken dependencies
    pip install CherryPy
    pip install importlib
    pip install pbr
    pip install html
-   
+
    # Shinken installation
    pip install shinken
 ```
+
+## My specific files ...
+   # Fetching doc and extra files
+   # Used later in the installation process
+   wget https://github.com/mohierf/Monitoring-configuration/archive/master.tar.gz
+   tar xvf master.tar.gz
+   # cd Monitoring-configuration-master
+
 
 ## Nagios Plugins
 ```
@@ -59,7 +67,7 @@ Execute all the commands when logged in with Shinken user account ...
 
 ```
    su - shinken
-   
+
    # Initialize Shinken cLI
    shinken --init
 ```
@@ -123,10 +131,11 @@ Execute all the commands when logged in with Shinken user account ...
    => host_name Shinken                # Set server hostname
    => use generic-host, linux-snmp     # Set server templates
 
-   # Fix missing perl dependency when checks are launched from Shinken directory
+   # Update missing plugins
    # !!! Fix Shinken bug !!!
-   # NOTE: Run this command only if you did not installed WMI module!
-   ln -s /usr/lib/nagios/plugins/utils.pm /var/lib/shinken/libexec/utils.pm
+   cp /root/Monitoring-configuration-master/plugins/check_netint.pl /var/lib/shinken/libexec/.
+   # chown shinken:shinken /var/lib/shinken/libexec/check_netint.pl
+   chmod 755 /var/lib/shinken/libexec/check_netint.pl
 ```
 
 ## Shinken logs
