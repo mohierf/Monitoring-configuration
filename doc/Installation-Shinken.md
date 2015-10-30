@@ -1,8 +1,12 @@
-On a fresh Debian 7.9 install:
+# Shinken installation
 
-Install Shinken
-=================
+On a fresh Debian 7.9 install:
+## Shinken framework
+```
+   # Logged in as root
    su -
+   
+   # Create a Shinken user account
    adduser shinken
    passwd shinken
 
@@ -10,21 +14,26 @@ Install Shinken
    apt-get install python-setuptools python-pip
    apt-get install python-pycurl
    apt-get install python-setproctitle
-
+   
    # Shinken dependencies
    pip install CherryPy
    pip install importlib
    pip install pbr
    pip install html
-
+   
    # Shinken installation
    pip install shinken
+```
 
-   # Nagios Plugins
+## Nagios Plugins
+```
    apt-get install nagios-plugins
    # Avoid errors when launching checks from Shinken ...
    chmod +s /usr/lib/nagios/plugins/*
+```
 
+## SNMP agent
+```
    # Install local SNMP agent
    su -
    apt-get install snmpd
@@ -41,13 +50,21 @@ Install Shinken
       rocommunity public
    # Restart SNMP agent
    /etc/init.d/snmpd restart
+```
 
-Configure Shinken
-=================
-   Main Shinken CLI commands
-   -------------------------
+# Shinken configuration, tips and tricks, ...
+
+## Main Shinken CLI commands
+Execute all the commands when logged in with Shinken user account ...
+
+```
    su - shinken
+   
+   # Initialize Shinken cLI
    shinken --init
+```
+
+```
    # To get online help
    shinken -h
    # Current installed version
@@ -59,19 +76,26 @@ Configure Shinken
 
    # Check current configuration - after every configuration change !
    shinken-arbiter -v -c /etc/shinken/shinken.cfg
+```
 
-   Shinken / system
-   -------------------------
+## Shinken / system
+```
    # Enable Shinken start at boot
    su -
    update-rc.d shinken defaults
-
+```
+```
    # Stop / start Shinken
    su -
+   # Get status
+   /etc/init.d/shinken status
+   # Start / stop
    /etc/init.d/shinken start
    /etc/init.d/shinken stop
+   # Restart (reload modified configuration)
    /etc/init.d/shinken restart
-
+```
+```
    # Check if daemons are running
    curl http://localhost:7768/ # (scheduler)
    curl http://localhost:7769/ # (reactionner)
@@ -79,17 +103,19 @@ Configure Shinken
    curl http://localhost:7771/ # (poller)
    curl http://localhost:7772/ # (broker)
    curl http://localhost:7773/ # (receiver)
+```
 
-Shinken modules
-=================
-   Check Windows servers
-   -------------------------
+# Shinken modules installation / configuration
+
+## Check Windows servers (WMI checks)
+```
    # Install Shinken commands for WMI checks
    su - shinken
    shinken install windows
+```
 
-   Check Linux servers
-   -------------------------
+## Check Linux servers (SNMP checks)
+```
    # Install Shinken commands for SNMP checks
    su - shinken
    shinken install linux-snmp
@@ -101,18 +127,20 @@ Shinken modules
    # !!! Fix Shinken bug !!!
    # NOTE: Run this command only if you did not installed WMI module!
    ln -s /usr/lib/nagios/plugins/utils.pm /var/lib/shinken/libexec/utils.pm
+```
 
-   Shinken logs
-   -------------------------
+## Shinken logs
+```
    # Install module: simple-log, build a /var/logs/shinken.log file compiling daemons log
    su - shinken
    shinken search log
    shinken install simple-log
    vi /etc/shinken/brokers/broker-master.cfg
    => modules simple-log
+```
 
-   Checks state retention
-   -------------------------
+## Checks state retention
+```
    # Install module: pickle-retention-file-scheduler, monitoring objects state retention between Shinken restart
    su - shinken
    shinken search retention
@@ -136,9 +164,10 @@ Shinken modules
    retention_update_interval=15
    # Save every 15 minutes ...
    # Set to 0 to disable retention (not recommanded !)
+```
 
-   Web User Interface
-   -------------------------
+## Web User Interface
+```
    # Install module: webui2, Web User Interface
    su - shinken
    shinken search ui
@@ -150,6 +179,11 @@ Shinken modules
    su -
    pip install pymongo>=3.0.3 requests arrow bottle==0.12.8
 
-   # Mongodb server
+   # Mongodb server (store user's preferences)
    su -
    apt-get install mongodb
+   # If not installed:
+   # - user's preferences will not persist on Shinken restart
+   # - few minutes of unavailability for WebUI after Shinken restart
+   # - no system not hosts/services history and availability
+```
