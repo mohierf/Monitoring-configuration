@@ -10,8 +10,13 @@ On a fresh Debian 7.9 install:
    adduser shinken
    passwd shinken
 
+   # Update server
+   apt-get update
+
    # Python setup tools
    apt-get install python-setuptools python-pip
+
+   # Python utilities
    apt-get install python-pycurl
    apt-get install python-setproctitle
 
@@ -25,14 +30,6 @@ On a fresh Debian 7.9 install:
    pip install shinken
 ```
 
-## My specific files ...
-   # Fetching doc and extra files
-   # Used later in the installation process
-   wget https://github.com/mohierf/Monitoring-configuration/archive/master.tar.gz
-   tar xvf master.tar.gz
-   # cd Monitoring-configuration-master
-
-
 ## Nagios Plugins
 ```
    apt-get install nagios-plugins
@@ -44,7 +41,10 @@ On a fresh Debian 7.9 install:
 ```
    # Install local SNMP agent
    su -
+   apt-get update
    apt-get install snmpd
+   # Not yet! but may be necessary for future monitoring of switches ...
+   # apt-get install snmp snmp-mibs-downloader
 
    # Allow SNMP get
    vi /etc/snmp/snmpd.conf
@@ -86,9 +86,17 @@ Execute all the commands when logged in with Shinken user account ...
    shinken-arbiter -v -c /etc/shinken/shinken.cfg
 ```
 
+## My specific files ...
+   # Fetching doc and extra files
+   # Used later in the installation process
+   wget https://github.com/mohierf/Monitoring-configuration/archive/master.tar.gz
+   tar xvf master.tar.gz
+   # cd Monitoring-configuration-master
+
 ## Shinken / system
 ```
    # Enable Shinken start at boot
+   # NOTE: Not enabled!
    su -
    update-rc.d shinken defaults
 ```
@@ -133,7 +141,7 @@ Execute all the commands when logged in with Shinken user account ...
 
    # Update missing plugins
    # !!! Fix Shinken bug !!!
-   cp /root/Monitoring-configuration-master/plugins/check_netint.pl /var/lib/shinken/libexec/.
+   cp ./Monitoring-configuration-master/plugins/check_netint.pl /var/lib/shinken/libexec/.
    # chown shinken:shinken /var/lib/shinken/libexec/check_netint.pl
    chmod 755 /var/lib/shinken/libexec/check_netint.pl
 ```
