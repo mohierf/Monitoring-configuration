@@ -41,22 +41,27 @@ shinken@shinken:~$ vi /etc/shinken/hosts/localhost.cfg
 ```
 
 ## Contacts
+
+By default, I configured two contacts (admin and guest) and two contacts groups (admins and guests).
+
+**Note**: the contact password defined in the password property is only to be used for Web UI login. You should chnage this password.
+
+### Defined contacts
 ```
 shinken@shinken:~$ vi /etc/shinken/contacts/admin.cfg
 
    # Administrator
    # Fred: Change its password ...
    define contact{
-       use                 generic-contact
-       contact_name        admin
-       alias               Big brother
-       email               shinken@localhost
-       pager               0600000000   ; contact phone number
-       password            **********
-       is_admin            1
-       expert              1
+      use                 generic-contact
+      contact_name        admin
+      alias               Big brother
+      email               shinken@localhost
+      pager               0600000000   ; contact phone number
+      password            **********
+      is_admin            1
+      expert              1
    }
-
 ```
 
 ```
@@ -65,16 +70,29 @@ shinken@shinken:~$ vi /etc/shinken/contacts/guest.cfg
    # Guest user
    # Fred: Change its password or remove this contact ...
    define contact{
-       use                 generic-contact
-       contact_name        guest
-       alias               Guest
-       email               guest@localhost
-       password            ********
-       can_submit_commands 0
+      use                 generic-contact
+      contact_name        guest
+      alias               Guest
+      email               guest@localhost
+      password            ********
+      can_submit_commands 0
    }
 
 ```
 
+### Defined contacts groups
+
+To add a contact to a contacts groups, simply add its `contact_name` to the members property of the group.
+
+```
+shinken@shinken:~$ vi /etc/shinken/contactgroups/admins.cfg
+
+define contactgroup{
+   contactgroup_name   admins
+   alias               Administrators
+   members             admin
+}
+```
 
 ## Business impact
 

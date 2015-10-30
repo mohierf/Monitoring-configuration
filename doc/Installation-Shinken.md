@@ -203,4 +203,19 @@ Execute all the commands when logged in with Shinken user account ...
    # - user's preferences will not persist on Shinken restart
    # - few minutes of unavailability for WebUI after Shinken restart
    # - no system not hosts/services history and availability
+
+   # Configuration
+   su - shinken
+   vi /etc/shinken/modules/webui2.cfg
+   =>
+      # Authentication secret for session cookie
+      auth_secret       ********
+
+
+      # WebUI timezone (default is Europe/Paris)
+      #timezone                  Europe/Paris
+      # Is this the right one to use ?
+      #timezone                  Brazil/East
+
+
 ```
