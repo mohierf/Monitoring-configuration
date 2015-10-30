@@ -1,12 +1,14 @@
 # SNMP checks for Linux servers
 
 ## My specific files ...
+```
    # Fetching doc and extra files
    # Used later in the installation process
    su -
    wget https://github.com/mohierf/Monitoring-configuration/archive/master.tar.gz
    tar xvf master.tar.gz
    # cd Monitoring-configuration-master
+```
 
 ## Check Windows servers (WMI checks)
 ```
@@ -77,9 +79,10 @@ This page contains more information about remote WMI configuration: https://kb.o
    # swap, services, eventlogs_applications and eventlogs_system
    # Those services checks need very specific configuration ...
    # ... and they should be activated later.
+```
 
 
-# Checks examples
+## Checks examples
 
    First line: launched command
    Second line: check output
