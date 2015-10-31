@@ -25,6 +25,9 @@
    vi srv-dom01.cfg
 
    # Set the host content
+   # - in the use property, set smbits-main for hosts located in main center, or smbits-second for hosts in secondary center ...
+
+      use                     generic-host, windows, important, smbits-main
       host_name               srv-dom01
       alias                   Windows Server / Backup Server / NAS
       display_name            srv-dom01
@@ -44,5 +47,22 @@
 
    # Restart Shinken
    su -
-   /etc/init.d/shinken restart
+   root@shinken:~# /etc/init.d/shinken restart
+   Restarting scheduler
+   . ok
+   Restarting poller
+   . ok
+   Restarting reactionner
+   . ok
+   Restarting broker
+   . ok
+   Restarting receiver
+   . ok
+   Restarting arbiter
+   Doing config check
+   . ok
+   . ok
+
+   # All must be ok, the new host is now monitored
+
 ```
