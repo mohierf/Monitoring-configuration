@@ -33,8 +33,23 @@ On a fresh Debian 7.9 install:
 ## Nagios Plugins
 ```
    apt-get install nagios-plugins
+   apt-get install nagios-nrpe-plugin
+
    # Avoid errors when launching checks from Shinken ...
    chmod +s /usr/lib/nagios/plugins/*
+
+   # When installing nagios-nrpe-plugin, some more packages are installed by default:
+      The following extra packages will be installed:
+        apache2-mpm-prefork apache2-utils apache2.2-bin apache2.2-common javascript-common libapache2-mod-php5 libapr1 libaprutil1 libaprutil1-dbd-sqlite3
+        libaprutil1-ldap libgd2-noxpm libjpeg8 libjs-jquery libonig2 libpng12-0 libqdbm14 nagios-images nagios3 nagios3-cgi nagios3-common nagios3-core php5-cli
+        php5-common ssl-cert wwwconfig-common
+      Suggested packages:
+        apache2-doc apache2-suexec apache2-suexec-custom apache2 httpd php-pear libgd-tools openssl-blacklist mysql-client postgresql-client
+      The following NEW packages will be installed:
+        apache2-mpm-prefork apache2-utils apache2.2-bin apache2.2-common javascript-common libapache2-mod-php5 libapr1 libaprutil1 libaprutil1-dbd-sqlite3
+        libaprutil1-ldap libgd2-noxpm libjpeg8 libjs-jquery libonig2 libpng12-0 libqdbm14 nagios-images nagios-nrpe-plugin nagios3 nagios3-cgi nagios3-common nagios3-core
+        php5-cli php5-common ssl-cert wwwconfig-common
+      0 upgraded, 26 newly installed, 0 to remove and 0 not upgraded.
 ```
 
 ## SNMP agent

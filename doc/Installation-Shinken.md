@@ -33,6 +33,8 @@ On a fresh Debian 7.9 install:
 ## Nagios Plugins
 ```
    apt-get install nagios-plugins
+   apt-get install nagios-nrpe-plugin
+
    # Avoid errors when launching checks from Shinken ...
    chmod +s /usr/lib/nagios/plugins/*
 ```
@@ -132,6 +134,8 @@ Pre defined checks packs
    su - shinken
    shinken install htpp
 ```
+
+gw-cd.imgnet.com.br
 
 ### Check Windows servers (WMI checks)
 ```
