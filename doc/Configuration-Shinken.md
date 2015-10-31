@@ -9,7 +9,7 @@ Note: All the files creation and modification should be made when lloged in with
 The main interesting part of this file are documented hereunder
 
 ```
-shinken@shinken:~$ vi /etc/shinken/hosts/localhost.cfg
+shinken@shinken:~$ vi /etc/shinken/shinken.cfg
 
    ...
    # Fred: default is 60 minutes, it is better every 15 minutes

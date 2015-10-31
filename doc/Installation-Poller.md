@@ -96,34 +96,6 @@ Execute all the commands when logged in with Shinken user account ...
    # cd Monitoring-configuration-master
 ```
 
-## Shinken / system
-```
-   # Enable Shinken start at boot
-   # NOTE: Not enabled!
-   su -
-   update-rc.d shinken defaults
-```
-```
-   # Stop / start Shinken
-   su -
-   # Get status
-   /etc/init.d/shinken status
-   # Start / stop
-   /etc/init.d/shinken start
-   /etc/init.d/shinken stop
-   # Restart (reload modified configuration)
-   /etc/init.d/shinken restart
-```
-```
-   # Check if daemons are running
-   curl http://localhost:7768/ # (scheduler)
-   curl http://localhost:7769/ # (reactionner)
-   curl http://localhost:7770/ # (arbiter)
-   curl http://localhost:7771/ # (poller)
-   curl http://localhost:7772/ # (broker)
-   curl http://localhost:7773/ # (receiver)
-```
-
 # Shinken modules installation / configuration
 
 ## Check Windows servers (WMI checks)
@@ -138,9 +110,6 @@ Execute all the commands when logged in with Shinken user account ...
    # Install Shinken commands for SNMP checks
    su - shinken
    shinken install linux-snmp
-   vi /etc/shinken/hosts/localhost.cfg
-   => host_name Shinken                # Set server hostname
-   => use generic-host, linux-snmp     # Set server templates
 
    # Update missing plugins
    # !!! Fix Shinken bug !!!
@@ -149,84 +118,111 @@ Execute all the commands when logged in with Shinken user account ...
    chmod 755 /var/lib/shinken/libexec/check_netint.pl
 ```
 
-## Shinken logs
-```
-   # Install module: simple-log, build a /var/logs/shinken.log file compiling daemons log
-   su - shinken
-   shinken search log
-   shinken install simple-log
-   vi /etc/shinken/brokers/broker-master.cfg
-   => modules simple-log
-```
 
-## Checks state retention
-```
-   # Install module: pickle-retention-file-scheduler, monitoring objects state retention between Shinken restart
-   su - shinken
-   shinken search retention
-   shinken install pickle-retention-file-scheduler
+# Shinken distributed configuration
 
-   # !!! Fix Shinken bug !!!
-   vi /var/lib/shinken/modules/pickle-retention-file-scheduler/module.py
-   # Comment as is:
-   import shinken
-   #from shinken.commandcall import CommandCall
-   #shinken.objects.command.CommandCall = CommandCall
+On the main Shinken server, you must:
 
-   # !!! Fix Shinken bug !!!
-   vi /etc/shinken/modules/pickle-retention-file-scheduler.cfg
-   =>
-      define module {
-          module_name     pickle-retention-file
-          module_type     pickle_retention_file
-          path            /var/lib/shinken/retention.dat
-      }
+   1/ set the scheduler master IP address to the server public IP address
 
-   # Add module to scheduler configuration
-   vi /etc/shinken/schedulers/scheduler-master.cfg
-   => modules pickle-retention-file
-   # Retention file is stored in /var/lib/shinken/retention.dat
-   # change path in /etc/shinken/modules/pickle-retention-file-scheduler.cfg if needed ...
+   2/ declare a new poller and define its poller tag
 
-   # Change/set periodical retention
-   vi /etc/shinken/shinken.cfg
-   retention_update_interval=15
-   # Save every 15 minutes ...
-   # Set to 0 to disable retention (not recommanded !)
-```
+On the remote Shinken server, you must:
 
-## Web User Interface
-```
-   # Install module: webui2, Web User Interface
-   su - shinken
-   shinken search ui
-   shinken install webui2
-   vi /etc/shinken/brokers/broker-master.cfg
-   => modules simple-log, webui2
+   3/ set the scheduler master IP address to the main server public IP address
 
-   # Webui Python dependencies
-   su -
-   pip install pymongo>=3.0.3 requests arrow bottle==0.12.8
+On both servers:
 
-   # Mongodb server (store user's preferences)
-   su -
-   apt-get install mongodb
-   # If not installed:
-   # - user's preferences will not persist on Shinken restart
-   # - few minutes of unavailability for WebUI after Shinken restart
-   # - no system not hosts/services history and availability
+   4/ check that the configuration is correct
 
-   # Configuration
-   su - shinken
-   vi /etc/shinken/modules/webui2.cfg
-   =>
-      # Authentication secret for session cookie
-      auth_secret       ********
+   5/ start (or restart) Shinken poller on the remote server
 
-
-      # WebUI timezone (default is Europe/Paris)
-      #timezone                  Europe/Paris
-      timezone                  America/Sao_Paulo
-
+   6/ start (or restart) Shinken on the main server
 
 ```
+1/
+shinken@shinken:/etc/shinken$ vi schedulers/scheduler-master.cfg
+
+      define scheduler {
+         scheduler_name      scheduler-master
+         address             shinken.smbits.com
+         port                7768
+         ...
+
+
+2/
+shinken@shinken:/etc/shinken$ cp pollers/poller-master.cfg pollers/poller-remote.cfg
+shinken@shinken:/etc/shinken$ vi pollers/poller-remote.cfg
+
+
+      define poller {
+         poller_name       poller-remote
+         address           gw-cd.imgnet.com.br
+         port              7771
+         ...
+         poller_tags       Remote
+
+
+3/
+shinken@img-srv-017:~$ vi /etc/shinken/schedulers/scheduler-master.cfg
+
+      define scheduler {
+         scheduler_name      scheduler-master ; Just the name
+         address             159.203.6.140    ; Main server public IP address
+         port                7768             ; TCP port of the daemon
+         ...
+
+4/
+shinken@shinken:/etc/shinken$ shinken-arbiter -v -c /etc/shinken/shinken.cfg
+
+shinken@img-srv-017:~$ shinken-arbiter -v -c /etc/shinken/shinken.cfg
+
+5/
+root@img-srv-017:~# /etc/init.d/shinken-poller start
+Starting poller:
+. ok
+
+root@img-srv-017:~# tail -n 500 -f /var/log/shinken/pollerd.log
+
+   [1446279000] INFO: [Shinken] Shinken 2.4.2
+   [1446279000] INFO: [Shinken] Copyright (c) 2009-2014:
+   [1446279000] INFO: [Shinken] Gabes Jean (naparuba@gmail.com)
+   [1446279000] INFO: [Shinken] Gerhard Lausser, Gerhard.Lausser@consol.de
+   [1446279000] INFO: [Shinken] Gregory Starck, g.starck@gmail.com
+   [1446279000] INFO: [Shinken] Hartmut Goebel, h.goebel@goebel-consult.de
+   [1446279000] INFO: [Shinken] License: AGPL
+   [1446279000] INFO: [Shinken] Trying to initialize additional groups for the daemon
+   [1446279000] INFO: [Shinken] Opening HTTP socket at http://0.0.0.0:7771
+   [1446279000] INFO: [Shinken] Initializing a CherryPy backend with 8 threads
+   [1446279000] INFO: [Shinken] Using the local log file '/var/log/shinken/pollerd.log'
+   [1446279000] INFO: [Shinken] Printing stored debug messages prior to our daemonization
+   [1446279000] INFO: [Shinken] Successfully changed to workdir: /var/run/shinken
+   [1446279000] INFO: [Shinken] Opening pid file: /var/run/shinken/pollerd.pid
+   [1446279000] INFO: [Shinken] Redirecting stdout and stderr as necessary..
+   [1446279000] INFO: [Shinken] We are now fully daemonized :) pid=18652
+   [1446279000] INFO: [Shinken] Starting HTTP daemon
+   [1446279001] INFO: [Shinken] Modules directory: /var/lib/shinken/modules
+   [1446279001] INFO: [Shinken] Modules directory: /var/lib/shinken/modules
+   [1446279001] INFO: [Shinken] Waiting for initial configuration
+
+6/
+root@shinken:~# /etc/init.d/shinken restart
+Restarting scheduler
+. ok
+Restarting poller
+. ok
+Restarting reactionner
+. ok
+Restarting broker
+. ok
+Restarting receiver
+. ok
+Restarting arbiter
+Doing config check
+. ok
+. ok
+
+
+```
+
+

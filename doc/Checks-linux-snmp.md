@@ -76,6 +76,11 @@ shinken@shinken:/etc/shinken/packs/linux-snmp$ vi templates.cfg
 
    # The LINUX template.
    define host {
+      name                linux-snmp
+      use                 generic-host
+      # Use default generic host check command (check_host_alive)
+      #check_command       check_ping
+      register            0
       ...
 
       # We will show the linux custom view

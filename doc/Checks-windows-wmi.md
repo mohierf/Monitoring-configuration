@@ -23,6 +23,24 @@ If not yet installed ...
    # => use generic-host, windows     # Set windows template
 ```
 
+## Configure Windows remote credentials
+```
+   vi /etc/shinken/resource.d/active-directory.cfg
+   =>
+     $DOMAIN$=.
+     $DOMAINUSERSHORT$=shinken
+     $DOMAINUSER$=$DOMAIN$\\$DOMAINUSERSHORT$
+     $DOMAINPASSWORD$=shinken
+```
+
+## Install PERL dependencies for check_wmi_plus plugin
+```
+   su -
+   apt-get install libnumber-format-perl
+   apt-get install libconfig-inifiles-perl
+   apt-get install libdatetime-perl
+```
+
 ## Prepare Windows host
 
 Create a user account:

@@ -123,14 +123,24 @@ Execute all the commands when logged in with Shinken user account ...
 
 # Shinken modules installation / configuration
 
-## Check Windows servers (WMI checks)
+## Shinken checks packs
+Pre defined checks packs
+
+### Check HTTP/HTTPS
+```
+   # Install Shinken commands for HTTP/HTTPS checks
+   su - shinken
+   shinken install htpp
+```
+
+### Check Windows servers (WMI checks)
 ```
    # Install Shinken commands for WMI checks
    su - shinken
    shinken install windows
 ```
 
-## Check Linux servers (SNMP checks)
+### Check Linux servers (SNMP checks)
 ```
    # Install Shinken commands for SNMP checks
    su - shinken
