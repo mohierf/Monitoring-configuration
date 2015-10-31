@@ -1,10 +1,12 @@
 # SNMP checks for Linux servers
 
 ## My specific files ...
+If not yet installed ...
+
 ```
+   su - shinken
    # Fetching doc and extra files
    # Used later in the installation process
-   su -
    wget https://github.com/mohierf/Monitoring-configuration/archive/master.tar.gz
    tar xvf master.tar.gz
    # cd Monitoring-configuration-master
@@ -12,23 +14,13 @@
 
 ## Check Windows servers (WMI checks)
 ```
-   # Install Shinken commands for SNMP checks
+   # Install Shinken commands for WMI checks
    su - shinken
-   shinken install linux-snmp
-   vi /etc/shinken/hosts/localhost.cfg
-   => host_name Shinken                # Set server hostname
-   => use generic-host, linux-snmp     # Set server templates
+   shinken install windows
 
-   # Fix missing perl dependency when checks are launched from Shinken directory
-   # !!! Fix Shinken bug !!!
-   # NOTE: Run this command only if you did not installed WMI module!
-   ln -s /usr/lib/nagios/plugins/utils.pm /var/lib/shinken/libexec/utils.pm
-
-   # Update missing plugins
-   # !!! Fix Shinken bug !!!
-   cp /root/Monitoring-configuration-master/plugins/check_netint.pl /var/lib/shinken/libexec/.
-   # chown shinken:shinken /var/lib/shinken/libexec/check_netint.pl
-   chmod 755 /var/lib/shinken/libexec/check_netint.pl
+   # Add a tag to concerned hosts ...
+   # vi /etc/shinken/hosts/localhost.cfg
+   # => use generic-host, windows     # Set windows template
 ```
 
 ## Prepare Windows host
@@ -89,35 +81,35 @@ This page contains more information about remote WMI configuration: https://kb.o
    Third line: performance data
 
 Ping:
-   /var/lib/shinken/libexec/check_ping -H 192.168.0.111 -w 1000,100% -c 3000,100% -p 1
+   /var/lib/shinken/libexec/check_ping -H 127.0.0.1 -w 1000,100% -c 3000,100% -p 1
 
    PING OK - Packet loss = 0%, RTA = 0.04 ms
 
       |rta=0.038000ms;1000.000000;3000.000000;0.000000 pl=0%;100;100;0
 
 Memory:
-   /var/lib/shinken/libexec/check_snmp_mem.pl -w 80 -c 95 -- -v 2c -c public 192.168.0.111
+   /var/lib/shinken/libexec/check_snmp_mem.pl -w 80 -c 95 -- -v 2c -c public 127.0.0.1
 
    MEMORY OK: 6.91 % used; Free => 898896 Kb, Total => 1027008 Kb, Cached => 42932 Kb, Buffered => 14192 Kb
 
       |ram_free=898896 ram_total=1027008 ram_cached=42932 ram_buffered=14192
 
 CPU:
-   /var/lib/shinken/libexec/check_snmp_load.pl -H 192.168.0.111 -C public -f -w 80 -c 90 -o 65535
+   /var/lib/shinken/libexec/check_snmp_load.pl -H 127.0.0.1 -C public -f -w 80 -c 90 -o 65535
 
    1 CPU, load 1.0% < 80% : OK
 
       | cpu_prct_used=1%;80;90
 
 Load:
-   /var/lib/shinken/libexec/check_snmp_load.pl -H 192.168.0.111 -C public -f -w 2,2,2 -c 3,3,3 -T netsl -o 65535
+   /var/lib/shinken/libexec/check_snmp_load.pl -H 127.0.0.1 -C public -f -w 2,2,2 -c 3,3,3 -T netsl -o 65535
 
    Load : 0.03 0.03 0.05 : OK
 
       | load_1_min=0.03;2;3 load_5_min=0.03;2;3 load_15_min=0.05;2;3
 
 Disks:
-   /var/lib/shinken/libexec/check_snmp_storage.pl -H 192.168.0.111 -C public -m / -f -w 90 -c 95 -S0,1 -o 65535
+   /var/lib/shinken/libexec/check_snmp_storage.pl -H 127.0.0.1 -C public -m / -f -w 90 -c 95 -S0,1 -o 65535
 
    OK : (<90%) All selected storages
 

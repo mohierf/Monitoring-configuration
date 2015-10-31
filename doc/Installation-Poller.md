@@ -1,4 +1,4 @@
-# Shinken installation
+# Shinken installation (remote poller)
 
 On a fresh Debian 7.9 install:
 ## Shinken framework
@@ -87,11 +87,14 @@ Execute all the commands when logged in with Shinken user account ...
 ```
 
 ## My specific files ...
+```
+   su - shinken
    # Fetching doc and extra files
    # Used later in the installation process
    wget https://github.com/mohierf/Monitoring-configuration/archive/master.tar.gz
    tar xvf master.tar.gz
    # cd Monitoring-configuration-master
+```
 
 ## Shinken / system
 ```
