@@ -88,13 +88,6 @@ Execute all the commands when logged in with Shinken user account ...
    shinken-arbiter -v -c /etc/shinken/shinken.cfg
 ```
 
-## My specific files ...
-   # Fetching doc and extra files
-   # Used later in the installation process
-   wget https://github.com/mohierf/Monitoring-configuration/archive/master.tar.gz
-   tar xvf master.tar.gz
-   # cd Monitoring-configuration-master
-
 ## Shinken / system
 ```
    # Enable Shinken start at boot
@@ -125,40 +118,13 @@ Execute all the commands when logged in with Shinken user account ...
 
 # Shinken modules installation / configuration
 
+## Shinken remote poller
+See [this document](Shinken-poller-installation.md).
+
+
 ## Shinken checks packs
-Pre defined checks packs
+See [this document](Shinken-checks-packs.md).
 
-### Check HTTP/HTTPS
-```
-   # Install Shinken commands for HTTP/HTTPS checks
-   su - shinken
-   shinken install htpp
-```
-
-gw-cd.imgnet.com.br
-
-### Check Windows servers (WMI checks)
-```
-   # Install Shinken commands for WMI checks
-   su - shinken
-   shinken install windows
-```
-
-### Check Linux servers (SNMP checks)
-```
-   # Install Shinken commands for SNMP checks
-   su - shinken
-   shinken install linux-snmp
-   vi /etc/shinken/hosts/localhost.cfg
-   => host_name Shinken                # Set server hostname
-   => use generic-host, linux-snmp     # Set server templates
-
-   # Update missing plugins
-   # !!! Fix Shinken bug !!!
-   cp ./Monitoring-configuration-master/plugins/check_netint.pl /var/lib/shinken/libexec/.
-   # chown shinken:shinken /var/lib/shinken/libexec/check_netint.pl
-   chmod 755 /var/lib/shinken/libexec/check_netint.pl
-```
 
 ## Shinken logs
 ```
@@ -238,6 +204,5 @@ gw-cd.imgnet.com.br
       # WebUI timezone (default is Europe/Paris)
       #timezone                  Europe/Paris
       timezone                  America/Sao_Paulo
-
 
 ```

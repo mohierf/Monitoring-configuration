@@ -5,6 +5,10 @@
    # Install Shinken commands for WMI checks
    su - shinken
    shinken install switch
+
+   # Add a tag to concerned hosts ...
+   # vi /etc/shinken/hosts/localhost.cfg
+   # => use generic-host, switch       # Set switch template
 ```
 
 ## Install check_nwc_health plugin
@@ -19,12 +23,4 @@
    make install
    ls -alht /var/lib/shinken/libexec/
    => check_nwc_health
-```
-
-## Install PERL dependencies for check_wmi_plus plugin
-```
-   su -
-   apt-get install libnumber-format-perl
-   apt-get install libconfig-inifiles-perl
-   apt-get install libdatetime-perl
 ```

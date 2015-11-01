@@ -75,55 +75,14 @@ On a fresh Debian 7.9 install:
    /etc/init.d/snmpd restart
 ```
 
-# Shinken configuration, tips and tricks, ...
+## Shinken plugins and checks packs
 
-## Main Shinken CLI commands
-Execute all the commands when logged in with Shinken user account ...
+On the remote poller installation, you must install all the plugins that are launched by the checks executed by the poller. For instance, your must install the Nagios plugins, the check_nwc_health, ...
 
-```
-   su - shinken
-
-   # Initialize Shinken cLI
-   shinken --init
-```
-
-```
-   # To get online help
-   shinken -h
-   # Current installed version
-   shinken --version
-   # List available commands
-   shinken --list
-   # Get list of installed modules
-   shinken inventory
-
-   # Check current configuration - after every configuration change !
-   shinken-arbiter -v -c /etc/shinken/shinken.cfg
-```
-
-## My specific files ...
-```
-   su - shinken
-   # Fetching doc and extra files
-   # Used later in the installation process
-   wget https://github.com/mohierf/Monitoring-configuration/archive/master.tar.gz
-   tar xvf master.tar.gz
-   # cd Monitoring-configuration-master
-```
-
-# Shinken modules installation / configuration
-
-## Check Windows servers
-See [this document](Checks-windows-wmi.md).
-
-## Check Linux servers
-See [this document for SNMP checks](Checks-linux-snmp.md) or [this document for NRPE checks](Checks-linux-nrpe.md).
-
-## Check switches
-See [this document](Checks-switches.md).
+See [this document](Shinken-checks-packs.md).
 
 
-# Shinken distributed configuration
+## Shinken distributed configuration
 
 On the main Shinken server, you must:
 
