@@ -31,6 +31,13 @@ Many checks packs are available on shinken.io packages repository. Shinken has a
    _CHECK_HTTP_URI                 /
    # Uncomment and set usernmae/password to check HTTP authentication
    _CHECK_HTTP_AUTH                #login:password
+
+   # For the hosts you want to check that HTTPS is available, configure:
+   _CHECK_HTTPS_DOMAIN_NAME        $HOSTADDRESS$
+   _CHECK_HTTPS_PORT               443
+   _CHECK_HTTPS_URI                /
+   _CHECK_HTTPS_AUTH               #login:password
+   _CHECK_HTTPS_MINIMUM_DAYS       30
 ```
 
 ## Check SMTP

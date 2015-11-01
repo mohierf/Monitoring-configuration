@@ -28,7 +28,11 @@
    vi srv-dom01.cfg
 
    # Set the host content
-   # - in the use property, set smbits-main for hosts located in main center, or smbits-second for hosts in secondary center ...
+   # - in the use property:
+   #     set smbits-main for hosts located in main center, or smbits-second for hosts in secondary center ...
+   #     set top-for-business for the most important host
+   #     set important for important hosts
+   #     set production for "normal" hosts
 
    define host{
       use                     generic-host, windows, important, smbits-main
