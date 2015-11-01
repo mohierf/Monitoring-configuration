@@ -114,24 +114,10 @@ Execute all the commands when logged in with Shinken user account ...
 # Shinken modules installation / configuration
 
 ## Check Windows servers (WMI checks)
-```
-   # Install Shinken commands for WMI checks
-   su - shinken
-   shinken install windows
-```
+See [this document](Checks-windows-wmi.md).
 
 ## Check Linux servers (SNMP checks)
-```
-   # Install Shinken commands for SNMP checks
-   su - shinken
-   shinken install linux-snmp
-
-   # Update missing plugins
-   # !!! Fix Shinken bug !!!
-   cp ./Monitoring-configuration-master/plugins/check_netint.pl /var/lib/shinken/libexec/.
-   # chown shinken:shinken /var/lib/shinken/libexec/check_netint.pl
-   chmod 755 /var/lib/shinken/libexec/check_netint.pl
-```
+See [this document for SNMP checks](Checks-linux-snmp.md) or [this document for NRPE checks](Checks-linux-nrpe.md).
 
 
 # Shinken distributed configuration
