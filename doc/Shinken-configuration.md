@@ -35,32 +35,50 @@ shinken@shinken:~$ vi /etc/shinken/hosts/localhost.cfg
            contact_groups          admins
            host_name               shinken
            alias                   Shinken
-           display_name            SMBits Shinken monitoring server
+           display_name            Shinken monitoring server
            address                 127.0.0.1
            }
 ```
 
+## Hosts
+For adding hosts, see [this document](Host-adding.md).
+
 ## Contacts
 
-By default, I configured two contacts (admin and guest) and two contacts groups (admins and guests).
+By default, I configured three contacts (admin, support and guest) and two contacts groups (admins and guests).
 
-**Note**: the contact password defined in the password property is only to be used for Web UI login. You should chnage this password.
+**Note**: the contact password defined in the password property is only to be used for Web UI login.
 
 ### Defined contacts
 ```
 shinken@shinken:~$ vi /etc/shinken/contacts/admin.cfg
 
    # Administrator
-   # Fred: Change its password ...
    define contact{
       use                 generic-contact
       contact_name        admin
       alias               Big brother
       email               shinken@localhost
-      pager               0600000000   ; contact phone number
+      pager               0600000000
       password            **********
       is_admin            1
       expert              1
+   }
+```
+
+```
+shinken@shinken:~$ vi /etc/shinken/contacts/support.cfg
+
+   # Support
+   define contact{
+      use             generic-contact
+      contact_name    support
+      alias           Support
+      email           frederic.mohier@gmail.com
+      pager           0600000000
+      password        **********
+      is_admin        1
+      expert          1
    }
 ```
 
