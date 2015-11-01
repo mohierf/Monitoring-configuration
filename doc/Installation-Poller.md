@@ -113,11 +113,14 @@ Execute all the commands when logged in with Shinken user account ...
 
 # Shinken modules installation / configuration
 
-## Check Windows servers (WMI checks)
+## Check Windows servers
 See [this document](Checks-windows-wmi.md).
 
-## Check Linux servers (SNMP checks)
+## Check Linux servers
 See [this document for SNMP checks](Checks-linux-snmp.md) or [this document for NRPE checks](Checks-linux-nrpe.md).
+
+## Check switches
+See [this document](Checks-switches.md).
 
 
 # Shinken distributed configuration
