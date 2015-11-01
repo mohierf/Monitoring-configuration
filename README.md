@@ -11,9 +11,9 @@ For remote site, see [this document](doc/Shinken-poller-installation.md).
 
 For configuration, see [this document](doc/Shinken-configuration.md).
 
-## Shinken configuration
+## Shinken/Graphite configuration
 
-For configuration, see [this document](doc/Shinken-configuration.md).
+For sending metrics to Carbon/Graphite, see [this document](doc/Shinken-Graphite.md).
 
 ## To be discussed / improved
 
