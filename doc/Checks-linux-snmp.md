@@ -94,6 +94,54 @@ shinken@shinken:/etc/shinken/packs/linux-snmp$ vi templates.cfg
 ```
 
 
+## Hosts specific configuration
+
+The main `linux-snmp` template declares macros used to configure the launched checks. The default values of these macros listed hereunder can be overriden in each host configuration.
+
+```
+    _SNMPCOMMUNITY      $SNMPCOMMUNITYREAD$
+    _SNMP_MSG_MAX_SIZE  65535
+
+    _LOAD_WARN          2,2,2
+    _LOAD_CRIT          3,3,3
+    _STORAGE_WARN       90
+    _STORAGE_CRIT       95
+    _CPU_WARN           80
+    _CPU_CRIT           90
+    _MEMORY_WARN        80
+    _MEMORY_CRIT        95
+    _NTP_WARN           0.128
+    _NTP_CRIT           1
+    _NET_IFACES         eth\d+|em\d+
+    _NET_WARN           90,90,0,0,0,0
+    _NET_CRIT           0,0,0,0,0,0
+
+    _CHKLOG_CONF        $PLUGINSDIR$/logFiles_linux.conf
+    _STORAGE_PATH       /
+
+```
+
+To set a specific value for a specific host, declare the same macro in the host definition file.
+```
+define host{
+   use                     generic-host, linux-snmp
+   contact_groups          admins
+   host_name               shinken-poller
+   address                 192.168.0.16
+
+   poller_tag              site-1
+
+   # Specific values for this host
+   # Change warning and critical alerts level for memory
+   _MEMORY_WARN        90
+   _MEMORY_CRIT        95
+
+   # Override linux-snmp default macro
+   # Only one Ethernet port ...
+   _NET_IFACES         eth0
+}
+```
+
 # Checks examples
 
    First line: launched command
