@@ -91,6 +91,69 @@ This page contains more information about remote WMI configuration: https://kb.o
    # ... and they should be activated later.
 ```
 
+## Hosts specific configuration
+
+The main `windows` template uses macros to launch the checks. The default values of these macros listed hereunder can be overriden in each host configuration.
+
+```
+   _DOMAIN                          $DOMAIN$
+   _DOMAINUSERSHORT                 $DOMAINUSERSHORT$
+   _DOMAINUSER                      $_HOSTDOMAIN$\\$_HOSTDOMAINUSERSHORT$
+   _DOMAINPASSWORD                  $DOMAINPASSWORD$
+
+   _WINDOWS_DISK_WARN               90
+   _WINDOWS_DISK_CRIT               95
+   _WINDOWS_EVENT_LOG_WARN          1
+   _WINDOWS_EVENT_LOG_CRIT          2
+   _WINDOWS_REBOOT_WARN             15min:
+   _WINDOWS_REBOOT_CRIT             5min:
+   _WINDOWS_MEM_WARN                80
+   _WINDOWS_MEM_CRIT                90
+   _WINDOWS_ALL_CPU_WARN            80
+   _WINDOWS_ALL_CPU_CRIT            90
+   _WINDOWS_CPU_WARN                80
+   _WINDOWS_CPU_CRIT                90
+   _WINDOWS_LOAD_WARN               10
+   _WINDOWS_LOAD_CRIT               20
+   _WINDOWS_NET_WARN                80
+   _WINDOWS_NET_CRIT                90
+   _WINDOWS_EXCLUDED_AUTO_SERVICES
+   _WINDOWS_AUTO_SERVICES_WARN      0
+   _WINDOWS_AUTO_SERVICES_CRIT      1
+   _WINDOWS_BIG_PROCESSES_WARN      25
+
+   #Default Network Interface
+   _WINDOWS_NETWORK_INTERFACE       Ethernet
+
+   # Now some alert level for a windows host
+   _WINDOWS_SHARE_WARN              90
+   _WINDOWS_SHARE_CRIT              95
+
+```
+
+To set a specific value for a specific host, declare the same macro in the host definition file.
+```
+define host{
+   use                     generic-host, windows
+   contact_groups          admins
+   host_name               sim-vm
+   address                 192.168.0.16
+
+   poller_tag              site-1
+
+   # Specific values for this host
+   # Change warning and critical alerts level for memory
+   # Same for CPU, ALL_CPU, DISK, LOAD, NET, ...
+   _WINDOWS_MEM_WARN       10
+   _WINDOWS_MEM_CRIT       20
+
+   # Exclude some services from automatic start check
+   # Use a regexp that matches against the short or long service name as it can be seen in the properties of the service in Windows.
+   # The matching services are excluded in the resulting list.
+   # Example: (ShortName)|(ShortName)| ... |(ShortName)
+   _WINDOWS_EXCLUDED_AUTO_SERVICES (IAStorDataMgrSvc)|(MMCSS)|(ShellHWDetection)|(sppsvc)|(clr_optimization_v4.0.30319_32)
+}
+```
 
 ## Checks examples
 
