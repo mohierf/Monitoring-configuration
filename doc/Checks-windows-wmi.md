@@ -93,7 +93,7 @@ This page contains more information about remote WMI configuration: https://kb.o
 
 ## Hosts specific configuration
 
-The main `windows` template uses macros to launch the checks. The default values of these macros listed hereunder can be overriden in each host configuration.
+The main `windows` template declares macros used to configure the launched checks. The default values of these macros listed hereunder can be overriden in each host configuration.
 
 ```
    _DOMAIN                          $DOMAIN$
