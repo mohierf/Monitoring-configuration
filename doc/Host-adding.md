@@ -6,80 +6,82 @@
    # On the main Shinken server
    su - shinken
 
-   # Shinken hosts declaration are here ...
+   # Shinken hosts declaration are located here ...
    cd /etc/shinken/hosts
 
-   # Hosts located on primary site (centro de distribução) are here ...
+   # Hosts located on primary site are defined in the `main` subdirectory.
    cd main
 
-   # Hosts located on secondary site (centrinho) are here ...
+   # Hosts located on secondary site are defined in the `second` subdirectory.
    # cd second
 
    # Copy an host file sample
    # - remote-poller.cfg, is a sample for a linux SNMP monitored host
-   # - uvb-pm.cfg, is a sample for a linux NRPE monitored host
-   # - img-srv-021.cfg, is a sample for a Windows WMI monitored host
+   # - tpl-npre-01.cfg, is a sample for a linux NRPE monitored host
+   # - tpl-win-01.cfg, is a sample for a Windows WMI monitored host
 
    # -------------------------------------
    # Windows sample
-   cp img-srv-021.cfg srv-dom01
+   cp tpl-win-01.cfg srv-win-01
 
    # Edit the new file
-   vi srv-dom01.cfg
+   vi srv-win-01.cfg
 
    # Set the host content
    # - in the use property:
-   #     set smbits-main for hosts located in main center, or smbits-second for hosts in secondary center ...
+   #     set company-main for hosts located in main center, or company-second for hosts in secondary center ...
    #     set top-for-business for the most important host
    #     set important for important hosts
    #     set production for "normal" hosts
 
    define host{
-      use                     generic-host, windows, important, smbits-main
+      use                     generic-host, windows, important, company-main
       contact_groups          admins
-      host_name               srv-dom01
-      alias                   Windows Server / Backup Server / NAS
-      display_name            srv-dom01
-      address                 192.168.168.8
+      host_name               srv-win-01
+      alias                   Windows Server
+      display_name            srv-win-01
+      address                 192.168.0.1
    }
    # -------------------------------------
 
    # -------------------------------------
    # Linux SNMP sample
-   cp remote-poller.cfg img-srv-0001.cfg
+   cp remote-poller.cfg srv-snmp-01.cfg
 
    # Edit the new file
-   vi img-srv-0001.cfg
+   vi srv-snmp-01.cfg
 
    # Set the host content
-   # - in the use property, set smbits-main for hosts located in main center, or smbits-second for hosts in secondary center ...
+   # - in the use property:
+   #     set company-main for hosts located in main center, or company-second for hosts in secondary center ...
 
    define host{
-      use                     generic-host, linux-snmp, top-for-business, smbits-main
+      use                     generic-host, linux-snmp, top-for-business, company-main
       contact_groups          admins
       host_name               img-srv-001
       alias                   Shinken remote poller
       display_name            img-srv-001
-      address                 192.168.168.13
+      address                 192.168.0.3
    }
    # -------------------------------------
 
    # -------------------------------------
    # Linux NRPE sample
-   cp uvb-pm.cfg uvb-xen01-1.cfg
+   cp tpl-npre-01.cfg srv-nrpe-01.cfg
 
    # Edit the new file
-   vi uvb-xen01-1.cfg
+   vi srv-nrpe-01.cfg
 
    # Set the host content
-   # - in the use property, set smbits-main for hosts located in main center, or smbits-second for hosts in secondary center ...
+   # - in the use property:
+   #     set company-main for hosts located in main center, or company-second for hosts in secondary center ...
 
    define host{
-      use                     generic-host, linux-nrpe, important, smbits-main
+      use                     generic-host, linux-nrpe, important, company-main
       contact_groups          admins
-      host_name               uvb-xen01-1
-      alias                   Unitrends Backup / Presentation
-      display_name            uvb-xen01-1
+      host_name               srv-nrpe-01
+      alias                   Backup server
+      display_name            srv-nrpe-01
       address                 192.168.168.249
    }
    # -------------------------------------
