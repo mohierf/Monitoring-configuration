@@ -122,7 +122,7 @@ Carbon is the most important element because it is the daemon that collects all 
       retentions = 1m:4h,5m:1w,30m:30d,1h:1y
 
       [default]
-      pattern = ^shinken\.
+      pattern = .*
       # 1m bucket for 4h
       # 5m bucket for one week
       # 30m bucket for 30 days
