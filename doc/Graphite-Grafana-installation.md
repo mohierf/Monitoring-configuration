@@ -221,6 +221,31 @@ Carbon is the most important element because it is the daemon that collects all 
 
 ```
 
+
+### Graphite Whisper utilities
+Many utilisty scripts are installed with Graphite:
+   whisper-create
+   whisper-fetch, Fetch all the metrics stored in a whisper file to stdout.
+   whisper-merge, Join two existing whisper files together.
+   whisper-set-aggregation-method, Change the aggregation method of an existing whisper file.
+   whisper-dump, Dump the metadata about a whisper file to stdout.
+   whisper-info, Info about the file
+   whisper-resize, Change the retention rates of an existing whisper file.
+   whisper-update, Update a whisper file with 1 or many values, must provide a time stamp with the value.
+   whisper-fill, Copies data from src in file
+
+   Doc about these scripts: https://github.com/graphite-project/whisper
+
+```
+   cd /var/lib/graphite/whisper
+
+   # List all metrics
+   find ./ -type f -name '*.wsp' -exec echo {} \;
+
+   # Count metrics
+   find ./ -type f -name *.wsp | wc -l
+```
+
 ### StatsD metrics collector
 
 StatsD flushes stats to Carbon/Graphite in sync with Graphite's configured write interval.
