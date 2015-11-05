@@ -256,7 +256,118 @@ To do this, it aggregates all of the data between flush intervals and creates si
  - StatsD will allow to get Shinken own internal metrics ...
  - no StatsD module exist officially on Shinken, but I developed a prototype not yet production ready!
 
+  From this tutorial: https://www.digitalocean.com/community/tutorials/how-to-configure-statsd-to-collect-arbitrary-stats-for-graphite-on-ubuntu-14-04
 ```
+   apt-get install git nodejs devscripts debhelper
+   mkdir ~/build
+   cd ~/build
+   git clone https://github.com/etsy/statsd.git
+   cd statsd
+   dpkg-buildpackage
+   cd ..
+
+   # Stop carbon
+   service carbon-cache stop
+   dpkg -i statsd*.deb
+   service carbon-cache start
+   apt-get update
+   apt-get install npm
+   apt-get -f install
+   service statsd stop
+   dpkg -i statsd*.deb
+
+   vi etc/statsd/localConfig.js
+   =>
+      {
+        graphitePort: 2003
+      , graphiteHost: "localhost"
+      , port: 8125
+      , graphite: {
+         legacyNamespace: false
+      }
+      }
+
+   vi /etc/carbon/storage-schemas.conf
+      # Schema definitions for Whisper files. Entries are scanned in order,
+      # and first match wins. This file is scanned for changes every 60 seconds.
+      #
+      #  [name]
+      #  pattern = regex
+      #  retentions = timePerPoint:timeToStore, timePerPoint:timeToStore, ...
+
+      # Carbon's internal metrics. This entry should match what is specified in
+      # CARBON_METRIC_PREFIX and CARBON_METRIC_INTERVAL settings
+      [carbon]
+      pattern = ^carbon\.
+      retentions = 60:90d
+
+      [statsd]
+      pattern = ^stats.*
+      retentions = 1m:4h,5m:1w,30m:30d,1h:1y
+
+      [default]
+      pattern = .*
+      # 1m bucket for 4h
+      # 5m bucket for one week
+      # 30m bucket for 30 days
+      # 1h bucket for one year
+      retentions = 1m:4h,5m:1w,30m:30d,1h:1y
+
+   vi /etc/carbon/storage-aggregation.conf
+      # Aggregation methods for whisper files. Entries are scanned in order,
+      # and first match wins. This file is scanned for changes every 60 seconds
+      #
+      #  [name]
+      #  pattern = <regex>
+      #  xFilesFactor = <float between 0 and 1>
+      #  aggregationMethod = <average|sum|last|max|min>
+      #
+      #  name: Arbitrary unique name for the rule
+      #  pattern: Regex pattern to match against the metric name
+      #  xFilesFactor: Ratio of valid data points required for aggregation to the next retention to occur
+      #  aggregationMethod: function to apply to data points for aggregation
+      #
+      [min]
+      pattern = \.min$
+      xFilesFactor = 0.1
+      aggregationMethod = min
+
+      [max]
+      pattern = \.max$
+      xFilesFactor = 0.1
+      aggregationMethod = max
+
+      [count]
+      pattern = \.count$
+      xFilesFactor = 0
+      aggregationMethod = sum
+
+      [lower]
+      pattern = \.lower(_\d+)?$
+      xFilesFactor = 0.1
+      aggregationMethod = min
+
+      [upper]
+      pattern = \.upper(_\d+)?$
+      xFilesFactor = 0.1
+      aggregationMethod = max
+
+      [sum]
+      pattern = \.sum$
+      xFilesFactor = 0
+      aggregationMethod = sum
+
+      [gauges]
+      pattern = ^.*\.gauges\..*
+      xFilesFactor = 0
+      aggregationMethod = last
+
+      [default_average]
+      pattern = .*
+      xFilesFactor = 0
+      aggregationMethod = average
+
+
 
 ```
 
