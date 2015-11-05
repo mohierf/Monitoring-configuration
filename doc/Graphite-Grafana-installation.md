@@ -75,6 +75,17 @@ Graphite Web application is useful to create some events in the Django backend b
 
 ```
 
+### Graphite fix:
+The installed version encounters a problem with the constantLine API function.
+
+A fix is to be applied:
+```
+   vi /usr/lib/python2.7/dist-packages/graphite/render/views.py
+   # Search and replace the commented line:
+        # timestamps = range(series.start, series.end, series.step)
+        timestamps = range(int(series.start), int(series.end) + 1, int(series.step))
+```
+
 ### Carbon metrics collector
 
 Carbon is the most important element because it is the daemon that collects all the metrics and store them in Whisper files.
